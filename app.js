@@ -21,7 +21,7 @@
   $('#vname').textContent = C.venueName;
   $('#vaddr').textContent = C.venueAddress;
   $('#vwhen').textContent = wd + ' · ' + dn + ' ' + mo + ' ' + yr + ' · ' + C.timeText;
-  $('#mapBtn').href = C.mapsLink;
+  if (C.mapsLink) { $('#mapBtn').href = C.mapsLink; } else { $('#mapBtn').style.display = 'none'; $('#qrcard').style.display = 'none'; }
 
   var contact = $('#contact');
   C.phones.forEach(function (p) {
@@ -39,6 +39,7 @@
 
   /* ---------- location QR (built in the browser, hidden if it cannot load) ---------- */
   (function () {
+    if (!C.mapsLink) return;
     var s = document.createElement('script');
     s.src = 'https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js';
     s.onload = function () {
@@ -168,9 +169,9 @@
     var loc = (C.venueName + ', ' + C.venueAddress).replace(/,/g, '\\,');
     var ics = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//Nikkah Invitation//EN', 'BEGIN:VEVENT',
       'UID:' + start.getTime() + '@nikkah-invitation', 'DTSTAMP:' + f(new Date()),
-      'DTSTART:' + f(start), 'DTEND:' + f(end),
+      'DTSTART:' + f(start),
       'SUMMARY:Nikah of Habeeba T.P & Muhammed Shamlan', 'LOCATION:' + loc,
-      'DESCRIPTION:' + C.mapsLink, 'END:VEVENT', 'END:VCALENDAR'].join('\r\n');
+      'DESCRIPTION:Nikah invitation', 'END:VEVENT', 'END:VCALENDAR'].join('\r\n');
     var a = document.createElement('a');
     a.href = URL.createObjectURL(new Blob([ics], { type: 'text/calendar' }));
     a.download = 'nikkah-invitation.ics';
